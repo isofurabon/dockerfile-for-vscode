@@ -1,0 +1,20 @@
+# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.163.1/containers/ubuntu/.devcontainer/base.Dockerfile
+
+# [Choice] Ubuntu version: bionic, focal
+ARG VARIANT="focal"
+FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
+
+# [Optional] Uncomment this section to install additional OS packages.
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends build-essential binutils gcc qemu-system-x86 ovmf
+
+# setup OVMF
+RUN mkdir /home/vscode/OVMF && cp /usr/share/OVMF/OVMF_CODE.fd /home/vscode/OVMF/ && cp /usr/share/OVMF/OVMF_VARS.fd /home/vscode/OVMF/
+
+# setup poiboot
+RUN wget -P /home/vscode/ https://github.com/cupnes/poiboot/releases/download/x86_64_ml_20190922/poiboot_x86_64_ml_20190922.zip && unzip /home/vscode/poiboot_x86_64_ml_20190922.zip -d /home/vscode/
+
+# setup directries for qemu
+RUN mkdir -p /home/vscode/fs/efi/boot/ && mv /home/vscode/poiboot_x86_64_ml_20190922/poiboot.efi /home/vscode/fs/efi/boot/bootx64.efi && mv /home/vscode/poiboot_x86_64_ml_20190922/poiboot.conf /home/vscode/fs/
+
+
