@@ -1,2 +1,2 @@
 # dockerfile-for-vscode
-My custom docker files is here.
+My custom docker files are here.
